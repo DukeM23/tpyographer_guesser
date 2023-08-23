@@ -3,39 +3,39 @@ import "./App.css";
 const fontFamilies = [
   {
     fontFamily: "Roboto",
-    src: "../fonts/Roboto-Regular.ttf",
+    src: "/fonts/Roboto-Regular.ttf",
   },
   {
     fontFamily: "Bodoni Moda",
-    src: "../fonts/BodoniModa-VariableFont_opsz,wght.ttf",
+    src: "/fonts/BodoniModa-VariableFont_opsz,wght.ttf",
   },
   {
     fontFamily: "Castoro Titling",
-    src: "../fonts/CastoroTitling-Regular.ttf",
+    src: "/fonts/CastoroTitling-Regular.ttf",
   },
   {
     fontFamily: "IBM Plex Sans KR",
-    src: "../fonts/IBMPlexSansKR-Regular.ttf",
+    src: "/fonts/IBMPlexSansKR-Regular.ttf",
   },
   {
     fontFamily: "Mansalva",
-    src: "../fonts/IBMPlexSansKR-Regular.ttf",
+    src: "/fonts/IBMPlexSansKR-Regular.ttf",
   },
   {
     fontFamily: "Odibee Sans",
-    src: "../fonts/OdibeeSans-Regular.ttf",
+    src: "/fonts/OdibeeSans-Regular.ttf",
   },
   {
     fontFamily: "Playfair Display",
-    src: "../fonts/PlayfairDisplay-VariableFont_wght.ttf",
+    src: "/fonts/PlayfairDisplay-VariableFont_wght.ttf",
   },
   {
     fontFamily: "Rubik",
-    src: "../fonts/Rubik-VariableFont_wght.ttf",
+    src: "/fonts/Rubik-VariableFont_wght.ttf",
   },
   {
     fontFamily: "Tilt Prism",
-    src: "../fonts/TiltPrism-Regular-VariableFont_XROT,YROT.ttf",
+    src: "/fonts/TiltPrism-Regular-VariableFont_XROT,YROT.ttf",
   },
   {
     fontFamily: "Times New Roman",
@@ -55,11 +55,11 @@ const fontFamilies = [
   },
   {
     fontFamily: "Zen Old Mincho",
-    src: "../fonts/ZenOldMincho-Regular.ttf",
+    src: "/fonts/ZenOldMincho-Regular.ttf",
   },
   {
     fontFamily: "Poppins",
-    src: "../fonts/Poppins-Regular.ttf",
+    src: "/fonts/Poppins-Regular.ttf",
   },
 ];
 

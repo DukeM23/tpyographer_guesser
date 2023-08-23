@@ -1,8 +1,5 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./App.css";
-import Something from "../fonts/";
 const fontFamilies = [
   {
     fontFamily: "Roboto",
@@ -69,7 +66,7 @@ const fontFamilies = [
 const getRandomFont = () => Math.floor(Math.random() * fontFamilies.length);
 
 function App() {
-  const [text, setText]: [String | null, any] = useState(
+  const [text, setText]: [string, Dispatch<SetStateAction<string>>] = useState(
     "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci vel"
   );
   const [font, setFont]: [any | null, any] = useState(
@@ -83,8 +80,9 @@ function App() {
 
   useEffect(() => {
     // setText("Do you mean the muffin man? The Muffin Man!");
-    var tCtx = document.getElementById("textCanvas").getContext("2d"), //Hidden canvas
-      imageElem = document.getElementById("image"); //Image element
+    var canvasPane = document.getElementById("textCanvas") as HTMLCanvasElement;
+    var tCtx: CanvasRenderingContext2D = canvasPane.getContext("2d")!; //Hidden canvas
+    var imageElem = document.getElementById("image")! as HTMLImageElement; //Image element
     // tCtx.font = "30px Roboto";
     if (src !== ".") {
       let f = new FontFace(fontFamily, `url("${src}")`);
@@ -96,7 +94,7 @@ function App() {
         tCtx.font = `60px ${fontFamily}`;
         // console.log(tCtx.font);
         tCtx.fillText(text, 0, 50, tCtx.measureText(text).width);
-        imageElem.src = tCtx.canvas.toDataURL();
+        imageElem!.src = tCtx.canvas.toDataURL();
       });
     } else {
       tCtx.canvas.width = tCtx.measureText(text).width;

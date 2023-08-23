@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import "./App.css";
 const fontFamilies = [
   {
@@ -66,9 +66,11 @@ const fontFamilies = [
 const getRandomFont = () => Math.floor(Math.random() * fontFamilies.length);
 
 function App() {
-  const [text, setText]: [string, Dispatch<SetStateAction<string>>] = useState(
-    "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci vel"
-  );
+  // const [text, setText]: [string, Dispatch<SetStateAction<string>>] = useState(
+  //   "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci vel"
+  // );
+  const text =
+    "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci vel";
   const [font, setFont]: [any | null, any] = useState(
     fontFamilies[getRandomFont()]
   );
@@ -169,5 +171,4 @@ function App() {
     </div>
   );
 }
-const MemoizedApp = React.memo(App);
 export default App;

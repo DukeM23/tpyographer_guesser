@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
@@ -69,16 +69,20 @@ const fontFamilies = [
 const getRandomFont = () => Math.floor(Math.random() * fontFamilies.length);
 
 function App() {
-  const [text, setText]: [String | null, any] = useState("Wienser man colects");
+  const [text, setText]: [String | null, any] = useState(
+    "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci vel"
+  );
   const [font, setFont]: [any | null, any] = useState(
     fontFamilies[getRandomFont()]
   );
+  const [random, setRandom]: [any | null, any] = useState([]);
+  const [score, setScore]: [number, Dispatch<SetStateAction<number>>] =
+    useState(0);
 
   const { fontFamily, src } = font;
 
   useEffect(() => {
     // setText("Do you mean the muffin man? The Muffin Man!");
-    console.log(font);
     var tCtx = document.getElementById("textCanvas").getContext("2d"), //Hidden canvas
       imageElem = document.getElementById("image"); //Image element
     // tCtx.font = "30px Roboto";
@@ -87,22 +91,28 @@ function App() {
 
       f.load().then((font) => {
         document.fonts.add(font);
-        console.log(font);
-        tCtx.canvas.width = tCtx.measureText(text).width + 1000;
+        tCtx.canvas.width = tCtx.measureText(text).width;
 
-        tCtx.font = `30px ${fontFamily}`;
+        tCtx.font = `60px ${fontFamily}`;
         // console.log(tCtx.font);
-        tCtx.fillText(text, 0, 50, 3000);
+        tCtx.fillText(text, 0, 50, tCtx.measureText(text).width);
         imageElem.src = tCtx.canvas.toDataURL();
       });
     } else {
-      tCtx.canvas.width = tCtx.measureText(text).width + 1000;
+      tCtx.canvas.width = tCtx.measureText(text).width;
 
-      tCtx.font = `30px ${fontFamily}`;
+      tCtx.font = `60px ${fontFamily}`;
       // console.log(tCtx.font);
-      tCtx.fillText(text, 0, 50, 3000);
+      tCtx.fillText(text, 0, 65, tCtx.measureText(text).width);
       imageElem.src = tCtx.canvas.toDataURL();
     }
+    console.log(random);
+    let fonts: any = [];
+    for (let i = 0; i < 3; ++i) {
+      let fontIdx = getRandomFont();
+      fonts = [...fonts, fontFamilies[fontIdx]];
+    }
+    setRandom([...fonts, font]);
   }, [text, font]);
 
   const handleClick = () => {
@@ -110,22 +120,54 @@ function App() {
 
     setFont(fontFamilies[index]);
   };
-  console.log(text);
+
+  const checkGuess = (e: any) => {
+    e.preventDefault();
+    const guess = e.target.value;
+    console.log(font.fontFamily);
+    if (guess === font.fontFamily) {
+      setScore((prevVal) => prevVal + 1);
+    } else {
+      setScore((prevVal) => prevVal - 1);
+    }
+    setFont(fontFamilies[getRandomFont()]);
+  };
   return (
-    <div className="p-1">
+    <div className="h-screen mt-20">
       <canvas
         id="textCanvas"
         className="hidden"
-        width={2000}
-        height={100}
+        width={1000}
+        height={110}
       ></canvas>
-      <img id="image" />
+      <div className="w-auto mx-20">
+        <img id="image" />
+      </div>
       <br />
-      <textarea id="text" onChange={(e) => setText(e.target.value)}></textarea>
-      <p style={{ fontFamily: "Roboto" }}>Something</p>
-      <button className="border-black border p-2" onClick={handleClick}>
-        Generate Font
-      </button>
+      <div className="flex justify-center">
+        <div>
+          <div className="grid grid-cols-2 gap-5  mx-auto">
+            {/* <textarea
+              className="col-span-2 border border-black"
+              onChange={(e) => setText(e.target.value)}
+            ></textarea> */}
+            {random.map((font: any, idx: number) => (
+              <button
+                key={idx}
+                value={font.fontFamily}
+                className="border-black border p-2"
+                onClick={checkGuess}
+              >
+                {font.fontFamily}
+              </button>
+            ))}
+          </div>
+          <p>Score: {score}</p>
+          <button className="" onClick={handleClick}>
+            Generate Font
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

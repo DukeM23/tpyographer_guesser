@@ -1,4 +1,5 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import axios from "axios";
 import "./App.css";
 const fontFamilies = [
   {
@@ -66,11 +67,9 @@ const fontFamilies = [
 const getRandomFont = () => Math.floor(Math.random() * fontFamilies.length);
 
 function App() {
-  // const [text, setText]: [string, Dispatch<SetStateAction<string>>] = useState(
-  //   "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci vel"
-  // );
-  const text =
-    "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci vel";
+  const [text, setText]: [string, Dispatch<SetStateAction<string>>] =
+    useState("Ready?");
+  // const text = "Neque porro quisquam est qui dolorem ipsum";
   const [font, setFont]: [any | null, any] = useState(
     fontFamilies[getRandomFont()]
   );
@@ -81,39 +80,58 @@ function App() {
   const { fontFamily, src } = font;
 
   useEffect(() => {
-    // setText("Do you mean the muffin man? The Muffin Man!");
-    var canvasPane = document.getElementById("textCanvas") as HTMLCanvasElement;
-    var tCtx: CanvasRenderingContext2D = canvasPane.getContext("2d")!; //Hidden canvas
-    var imageElem = document.getElementById("image")! as HTMLImageElement; //Image element
-    // tCtx.font = "30px Roboto";
-    if (src !== ".") {
-      let f = new FontFace(fontFamily, `url("${src}")`);
+    const randomWord = async () => {
+      const { data } = await axios.get(
+        "https://random-word-api.herokuapp.com/word"
+      );
+      setText(data[0]);
+      console.log(text);
+      var canvasPane = document.getElementById(
+        "textCanvas"
+      ) as HTMLCanvasElement;
+      var tCtx: CanvasRenderingContext2D = canvasPane.getContext("2d")!; //Hidden canvas
+      var imageElem = document.getElementById("image") as HTMLImageElement; //Image element
+      tCtx.textAlign = "center";
+      if (src !== ".") {
+        let f = new FontFace(fontFamily, `url("${src}")`);
 
-      f.load().then((font) => {
-        document.fonts.add(font);
-        tCtx.canvas.width = tCtx.measureText(text).width;
+        f.load().then((font) => {
+          document.fonts.add(font);
+          tCtx.canvas.width = tCtx.measureText(text).width + 1000;
+
+          tCtx.font = `60px ${fontFamily}`;
+          // console.log(tCtx.font);
+          console.log(tCtx);
+          tCtx.fillText(text, 0, 70, tCtx.measureText(text).width);
+          imageElem.src = tCtx.canvas.toDataURL();
+        });
+      } else {
+        tCtx.canvas.width = tCtx.measureText(text).width + 1000;
 
         tCtx.font = `60px ${fontFamily}`;
-        // console.log(tCtx.font);
-        tCtx.fillText(text, 0, 50, tCtx.measureText(text).width);
-        imageElem!.src = tCtx.canvas.toDataURL();
-      });
-    } else {
-      tCtx.canvas.width = tCtx.measureText(text).width;
+        console.log(tCtx);
+        tCtx.fillText(text, 0, 70, tCtx.measureText(text).width);
+        imageElem.src = tCtx.canvas.toDataURL();
+      }
+      let fonts: any = [];
+      fonts.push(font.fontFamily);
+      let i = 3;
+      while (i > 0) {
+        let fontIdx = getRandomFont();
+        if (fonts.indexOf(fontFamilies[fontIdx].fontFamily) !== -1) {
+          console.log("dupe!");
+          continue;
+        } else {
+          console.log("not a dupe");
+        }
+        fonts = [...fonts, fontFamilies[fontIdx].fontFamily];
+        i--;
+      }
+      setRandom(fonts);
+    };
 
-      tCtx.font = `60px ${fontFamily}`;
-      // console.log(tCtx.font);
-      tCtx.fillText(text, 0, 65, tCtx.measureText(text).width);
-      imageElem.src = tCtx.canvas.toDataURL();
-    }
-    console.log(random);
-    let fonts: any = [];
-    for (let i = 0; i < 3; ++i) {
-      let fontIdx = getRandomFont();
-      fonts = [...fonts, fontFamilies[fontIdx]];
-    }
-    setRandom([...fonts, font]);
-  }, [text, font]);
+    randomWord();
+  }, [font]);
 
   const handleClick = () => {
     const index = getRandomFont();
@@ -124,7 +142,6 @@ function App() {
   const checkGuess = (e: any) => {
     e.preventDefault();
     const guess = e.target.value;
-    console.log(font.fontFamily);
     if (guess === font.fontFamily) {
       setScore((prevVal) => prevVal + 1);
     } else {
@@ -140,8 +157,8 @@ function App() {
         width={1000}
         height={110}
       ></canvas>
-      <div className="w-auto mx-20">
-        <img id="image" />
+      <div className="flex justify-center w-auto mx-20 border border-black">
+        <img id="image" className="object-scale-down" />
       </div>
       <br />
       <div className="flex justify-center">
@@ -154,11 +171,11 @@ function App() {
             {random.map((font: any, idx: number) => (
               <button
                 key={idx}
-                value={font.fontFamily}
+                value={font}
                 className="border-black border p-2"
                 onClick={checkGuess}
               >
-                {font.fontFamily}
+                {font}
               </button>
             ))}
           </div>
